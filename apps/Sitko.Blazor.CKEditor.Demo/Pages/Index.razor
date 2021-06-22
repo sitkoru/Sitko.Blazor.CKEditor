@@ -1,0 +1,19 @@
+@page "/"
+
+<h1>CKEditor</h1>
+<EditForm Model="ModelInstance">
+    <CKEditor @bind-Value="@ModelInstance.Html"></CKEditor>
+</EditForm>
+<pre>
+    @ModelInstance.Html
+</pre>
+
+@code{
+    public Model ModelInstance { get; set; } = new Model();
+    
+
+    public class Model
+    {
+        public string Html { get; set; } = "Hello, world!";    
+    }
+}

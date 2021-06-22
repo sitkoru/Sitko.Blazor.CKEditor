@@ -1,0 +1,85 @@
+@inject IJSRuntime _jsRuntime
+@implements System.IAsyncDisposable
+@inject IOptions<CKEditorOptions> _options
+@using Microsoft.Extensions.Options
+@inherits InputText
+
+@{
+    var editorStyle = _htmlMode ? "display: none" : "display: block";
+    var textAreaStyle = _htmlMode ? "display: block" : "display: none";
+}
+<div style="@textAreaStyle">
+    <textarea class="ant-input" Placeholder="Введите HTML" rows="5" @bind="@CurrentValue"></textarea>
+</div>
+
+<div style="@editorStyle">
+    <textarea Placeholder="Введите текст" id="@EditorId"></textarea>
+</div>
+@if (AllowHtmlMode)
+{
+    <div class="text-right">
+        <a class="dashed-link" @onclick="@SwitchModeAsync" @onclick:preventDefault href="#">@(_htmlMode ? "Переключиться на редактор" : "Переключиться на HTML")</a>
+    </div>
+}
+
+
+@code {
+    private string EditorId { get; } = $"cke_{Guid.NewGuid()}";
+    private bool _htmlMode = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await _jsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.loadScript", new {scriptPath = _options.Value.GetScriptPath(), callback = new {instance = DotNetObjectReference.Create(this), method = nameof(InitializeEditorAsync)}});
+        }
+    }
+
+    [JSInvokable]
+    public async Task InitializeEditorAsync()
+    {
+        var arg = new {selector = $"{EditorId}", editorClass = _options.Value.CKEditorClassName, instance = DotNetObjectReference.Create(this), content = Value};
+        await _jsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", arg);
+    }
+
+    private ValueTask DestroyEditor()
+    {
+        if (!_htmlMode)
+        {
+            var arg = new {selector = $"{EditorId}"};
+            return _jsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.destroy", arg);
+        }
+        return new ValueTask();
+    }
+
+    [JSInvokable]
+    public Task<bool> UpdateText(string editorText)
+    {
+        CurrentValue = editorText;
+        return Task.FromResult(true);
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        return DestroyEditor();
+    }
+
+    private async Task SwitchModeAsync()
+    {
+        if (_htmlMode)
+        {
+            _htmlMode = false;
+            await InitializeEditorAsync();
+        }
+        else
+        {
+            await DestroyEditor();
+            _htmlMode = true;
+        }
+    }
+
+    [Parameter]
+    public bool AllowHtmlMode { get; set; } = true;
+
+}
