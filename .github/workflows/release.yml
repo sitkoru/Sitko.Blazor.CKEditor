@@ -9,6 +9,9 @@ jobs:
     build:
         runs-on: ubuntu-latest
         container: ghcr.io/sitkoru/actions-container
+        env:
+            PROJECT: Sitko.Blazor.CKEditor
+            BUNDLE_PROJECT: Sitko.Blazor.CKEditor.Bundle
         steps:
             -   name: Checkout code
                 uses: actions/checkout@v2.3.4
@@ -30,13 +33,22 @@ jobs:
                 uses: actions/setup-dotnet@v1.8.0
                 with:
                     dotnet-version: '5.0.x'
-            -   name: Build js
-                working-directory: src/${{ env.PROJECT}}/Web
+            -   name: Build main js
+                working-directory: src/${{ env.PROJECT }}/Web
+                shell: bash
                 run: |
                     - npm ci
                     - npm run prod
-            -   name: Create package
+            -   name: Build bundle js
+                working-directory: src/${{ env.BUNDLE_PROJECT }}/Web
+                shell: bash
+                run: |
+                    - npm ci
+                    - npm run prod
+            -   name: Create main package
                 run: dotnet pack /p:Version=${{ steps.prep.outputs.version }} -c Release src/${{ env.PROJECT}}
-            -   name: Publish nuget package
-                run: dotnet nuget push packages/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }}
+            -   name: Create packages
+                run: dotnet pack /p:Version=${{ steps.prep.outputs.version }} -c Release -o $(pwd)/packages
+            -   name: Push to Nuget
+                run: find packages -name *.nupkg -exec dotnet nuget push {} -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} \;
                     

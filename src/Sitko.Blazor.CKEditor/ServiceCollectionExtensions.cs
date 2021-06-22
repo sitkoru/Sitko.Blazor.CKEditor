@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Sitko.Blazor.CKEditor
@@ -6,12 +8,16 @@ namespace Sitko.Blazor.CKEditor
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddCKEditor(this IServiceCollection serviceCollection,
-            Action<CKEditorOptions>? configure = null)
+            IConfiguration configuration,
+            Action<CKEditorOptions>? postConfigure = null)
         {
-            if (configure is not null)
+            var builder = serviceCollection.AddOptions<CKEditorOptions>().Bind(configuration.GetSection("CKEditor"));
+            if (postConfigure is not null)
             {
-                serviceCollection.Configure(configure);
+                builder.PostConfigure(postConfigure);
             }
+
+            builder.ValidateDataAnnotations();
 
             return serviceCollection;
         }
@@ -19,31 +25,7 @@ namespace Sitko.Blazor.CKEditor
 
     public class CKEditorOptions
     {
-        public string? CustomScriptPath { get; set; }
-        public string CKEditorClassName { get; set; } = "BlazorEditor";
-
-        public CKEditorTheme Theme { get; set; } = CKEditorTheme.Light;
-
-        public string GetScriptPath()
-        {
-            if (!string.IsNullOrEmpty(CustomScriptPath))
-            {
-                return CustomScriptPath;
-            }
-
-            var basePath = $"/_content/{typeof(CKEditor).Assembly.GetName().Name}";
-            return Theme switch
-            {
-                CKEditorTheme.Light => $"{basePath}/ckeditor.js",
-                CKEditorTheme.Dark => $"{basePath}/ckeditor.dark.js",
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
-    }
-
-    public enum CKEditorTheme
-    {
-        Light,
-        Dark
+        [Required] public string ScriptPath { get; set; } = "";
+        [Required] public string EditorClassName { get; set; } = "";
     }
 }

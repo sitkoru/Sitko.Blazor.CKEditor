@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Sitko.Blazor.CKEditor.Bundle;
 
 namespace Sitko.Blazor.CKEditor.Demo
 {
@@ -21,15 +22,18 @@ namespace Sitko.Blazor.CKEditor.Demo
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddCKEditor(options =>
-            {
-                options.Theme = CKEditorTheme.Dark;
-            });
-            // services.AddCKEditor(options =>
+            // Add CKEditor
+            services.AddCKEditor(Configuration);
+            
+            // Or add CKEditor with manual configuration
+            // services.AddCKEditor(Configuration, options =>
             // {
-            //     options.CustomScriptPath = "https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js";
-            //     options.CKEditorClassName = "ClassicEditor";
+            //     options.ScriptPath = "https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js";
+            //     options.EditorClassName = "ClassicEditor";
             // });
+            
+            // Or add CKEditor Bundle with dark theme 
+            //services.AddCKEditorBundle(Configuration, CKEditorTheme.Dark);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

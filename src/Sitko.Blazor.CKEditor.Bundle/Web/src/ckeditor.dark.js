@@ -1,2 +1,2 @@
 export {default} from "./ckeditor.base";
-import './dark.css';
+import './ckeditor.dark.css';

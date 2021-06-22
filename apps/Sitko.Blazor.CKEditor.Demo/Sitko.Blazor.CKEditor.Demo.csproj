@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Sitko.Blazor.CKEditor\Sitko.Blazor.CKEditor.csproj" />
+    <ProjectReference Include="..\..\src\Sitko.Blazor.CKEditor.Bundle\Sitko.Blazor.CKEditor.Bundle.csproj" />
   </ItemGroup>
 
 </Project>

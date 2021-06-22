@@ -32,14 +32,14 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            await _jsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.loadScript", new {scriptPath = _options.Value.GetScriptPath(), callback = new {instance = DotNetObjectReference.Create(this), method = nameof(InitializeEditorAsync)}});
+            await _jsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.loadScript", new {scriptPath = _options.Value.ScriptPath, callback = new {instance = DotNetObjectReference.Create(this), method = nameof(InitializeEditorAsync)}});
         }
     }
 
     [JSInvokable]
     public async Task InitializeEditorAsync()
     {
-        var arg = new {selector = $"{EditorId}", editorClass = _options.Value.CKEditorClassName, instance = DotNetObjectReference.Create(this), content = Value};
+        var arg = new {selector = $"{EditorId}", editorClass = _options.Value.EditorClassName, instance = DotNetObjectReference.Create(this), content = Value};
         await _jsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", arg);
     }
 
