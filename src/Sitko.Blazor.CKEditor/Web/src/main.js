@@ -59,7 +59,9 @@ window.SitkoBlazorCKEditor = {
             .create(document.querySelector('#' + params.selector), {})
             .then(editor => {
                 window.SitkoBlazorCKEditor.editors[params.selector] = editor;
-                editor.setData(params.content ? params.content : '');
+                if (params.content) {
+                    editor.setData(params.content);
+                }
                 editor.model.document.on('change:data', () => {
                     params.instance.invokeMethodAsync('UpdateText', editor.getData());
                 });
