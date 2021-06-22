@@ -37,14 +37,14 @@ jobs:
                 working-directory: src/${{ env.PROJECT }}/Web
                 shell: bash
                 run: |
-                    - npm ci
-                    - npm run prod
+                    npm ci
+                    npm run prod
             -   name: Build bundle js
                 working-directory: src/${{ env.BUNDLE_PROJECT }}/Web
                 shell: bash
                 run: |
-                    - npm ci
-                    - npm run prod
+                    npm ci
+                    npm run prod
             -   name: Create main package
                 run: dotnet pack /p:Version=${{ steps.prep.outputs.version }} -c Release src/${{ env.PROJECT}}
             -   name: Create packages
