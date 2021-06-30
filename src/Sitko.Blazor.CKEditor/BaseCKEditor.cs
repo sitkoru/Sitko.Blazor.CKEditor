@@ -11,14 +11,40 @@ namespace Sitko.Blazor.CKEditor
     {
         [Inject] protected IOptions<CKEditorOptions> Options { get; set; } = null!;
         [Inject] protected IJSRuntime JsRuntime { get; set; } = null!;
-        protected string EditorId { get; } = $"cke_{Guid.NewGuid()}";
-        protected bool HtmlMode;
+        [Parameter] public string Placeholder { get; set; } = "Enter text";
+        [Parameter] public string Class { get; set; } = "";
+        [Parameter] public string Style { get; set; } = "";
+
+        [Parameter]
+        public string TextareaStyle { get; set; } = "width: 100%; " +
+                                                    "border: 1px solid var(--ck-color-base-border); " +
+                                                    "border-radius: var(--ck-border-radius); " +
+                                                    "padding: var(--ck-spacing-large) var(--ck-spacing-standard);";
+
+        [Parameter] public string TextareaClass { get; set; } = "";
+        [Parameter] public string SwitchToEditorText { get; set; } = "Switch to editor";
+        [Parameter] public string SwitchToHtmlText { get; set; } = "Switch to HTML";
+        [Parameter] public bool AllowHtmlMode { get; set; } = true;
+        [Parameter] public RenderFragment<CKEdtitorModeSwitcher>? ModeSwitcherContent { get; set; }
+        private CKEditorMode _mode = CKEditorMode.Editor;
+        private IDisposable? _instance;
+        protected ElementReference EditorRef { get; set; }
+        protected readonly CKEdtitorModeSwitcher ModeSwitcher;
+        public readonly Guid Id = Guid.NewGuid();
+        private bool _rendered;
+        private string? _lastValue;
+
+        public BaseCKEditorComponent()
+        {
+            ModeSwitcher = new CKEdtitorModeSwitcher(this, _mode);
+        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
+                _instance = DotNetObjectReference.Create(this);
                 await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.loadScript",
                     new
                     {
@@ -32,24 +58,30 @@ namespace Sitko.Blazor.CKEditor
             }
         }
 
+        protected override async Task OnParametersSetAsync()
+        {
+            await base.OnParametersSetAsync();
+            if (_rendered && _lastValue != CurrentValue)
+            {
+                await UpdateEditor();
+            }
+        }
+
         [JSInvokable]
         public async Task InitializeEditorAsync()
         {
-            var arg = new
-            {
-                selector = $"{EditorId}",
-                editorClass = Options.Value.EditorClassName,
-                instance = DotNetObjectReference.Create(this)
-            };
-            await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", arg);
+            await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", EditorRef,
+                Options.Value.EditorClassName, _instance, Id);
+            _rendered = true;
+            _lastValue = CurrentValue;
         }
 
-        private ValueTask DestroyEditor()
+        protected ValueTask DestroyEditor()
         {
-            if (!HtmlMode)
+            _rendered = false;
+            if (_mode == CKEditorMode.Editor)
             {
-                var arg = new {selector = $"{EditorId}"};
-                return JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.destroy", arg);
+                return JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.destroy", Id);
             }
 
             return new ValueTask();
@@ -58,29 +90,59 @@ namespace Sitko.Blazor.CKEditor
         [JSInvokable]
         public Task<bool> UpdateText(string editorText)
         {
+            _lastValue = editorText;
             CurrentValue = editorText;
             return Task.FromResult(true);
         }
 
+        public ValueTask UpdateEditor()
+        {
+            return JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.update", Id, CurrentValue);
+        }
+
         public ValueTask DisposeAsync()
         {
+            _instance?.Dispose();
             return DestroyEditor();
         }
 
-        protected async Task SwitchModeAsync()
+        public async Task<CKEditorMode> SwitchModeAsync()
         {
-            if (HtmlMode)
+            if (_mode == CKEditorMode.Html)
             {
-                HtmlMode = false;
+                _mode = CKEditorMode.Editor;
                 await InitializeEditorAsync();
             }
             else
             {
                 await DestroyEditor();
-                HtmlMode = true;
+                _mode = CKEditorMode.Html;
             }
+
+            return _mode;
+        }
+    }
+
+    public class CKEdtitorModeSwitcher
+    {
+        private readonly BaseCKEditorComponent _editor;
+        public CKEditorMode CurrentMode { get; private set; }
+
+        public CKEdtitorModeSwitcher(BaseCKEditorComponent editor, CKEditorMode mode)
+        {
+            _editor = editor;
+            CurrentMode = mode;
         }
 
-        [Parameter] public bool AllowHtmlMode { get; set; } = true;
+        public async Task SwitchModeAsync()
+        {
+            CurrentMode = await _editor.SwitchModeAsync();
+        }
+    }
+
+    public enum CKEditorMode
+    {
+        Editor,
+        Html
     }
 }

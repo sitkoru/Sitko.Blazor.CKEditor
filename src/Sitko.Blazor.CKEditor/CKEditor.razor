@@ -1,19 +1,27 @@
 @inherits BaseCKEditorComponent
-
-@{
-    var editorStyle = HtmlMode ? "display: none" : "display: block";
-    var textAreaStyle = HtmlMode ? "display: block" : "display: none";
-}
-<div style="@textAreaStyle">
-    <textarea class="ant-input" Placeholder="Введите HTML" rows="5" @bind="@CurrentValue"></textarea>
+<div class="blazor-ck-editor @Class" style="@Style">
+    <textarea 
+        style="@TextareaStyle" 
+        class="blazor-ck-editor-textarea @TextareaClass" 
+        Placeholder="@Placeholder" 
+        @ref="EditorRef" 
+        @bind="CurrentValue">
+    </textarea>
+    @if (AllowHtmlMode)
+    {
+        <div class="blazor-ck-editor-switch_mode">
+            @if (ModeSwitcherContent != null)
+            {
+                @ModeSwitcherContent(ModeSwitcher)
+            }
+            else
+            {
+                <a href="#"
+                   @onclick:preventDefault
+                   @onclick="ModeSwitcher.SwitchModeAsync">
+                    @(ModeSwitcher.CurrentMode == CKEditorMode.Html ? SwitchToEditorText : SwitchToHtmlText)
+                </a>
+            }
+        </div>
+    }
 </div>
-
-<div style="@editorStyle">
-    <textarea Placeholder="Введите текст" id="@EditorId">@Value</textarea>
-</div>
-@if (AllowHtmlMode)
-{
-    <div class="text-right">
-        <a class="dashed-link" @onclick="@SwitchModeAsync" @onclick:preventDefault href="#">@(HtmlMode ? "Переключиться на редактор" : "Переключиться на HTML")</a>
-    </div>
-}

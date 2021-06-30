@@ -54,26 +54,28 @@ window.SitkoBlazorCKEditor = {
             document["body"].appendChild(script);
         });
     },
-    init: function (params) {
-        window[params["editorClass"]]
-            .create(document.querySelector('#' + params.selector), {})
+    init: function (element, editorClass, instance, id) {
+        window[editorClass]
+            .create(element, {})
             .then(editor => {
-                window.SitkoBlazorCKEditor.editors[params.selector] = editor;
-                if (params.content) {
-                    editor.setData(params.content);
-                }
+                window.SitkoBlazorCKEditor.editors[id] = editor;
                 editor.model.document.on('change:data', () => {
-                    params.instance.invokeMethodAsync('UpdateText', editor.getData());
+                    instance.invokeMethodAsync('UpdateText', editor.getData());
                 });
             })
             .catch(error => {
                 console.error(error);
             });
     },
-    destroy: function (params) {
-        if (this.editors.hasOwnProperty(params.selector)) {
-            this.editors[params.selector].destroy();
-            delete this.editors[params.selector];
+    update: function (id, content) {
+        if (this.editors.hasOwnProperty(id)) {
+            this.editors[id].setData(content);
+        }
+    },
+    destroy: function (id) {
+        if (this.editors.hasOwnProperty(id)) {
+            this.editors[id].destroy();
+            delete this.editors[id];
         }
     }
 };
