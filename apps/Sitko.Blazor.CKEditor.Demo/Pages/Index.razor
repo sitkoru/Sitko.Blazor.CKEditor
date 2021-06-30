@@ -2,18 +2,48 @@
 
 <h1>CKEditor</h1>
 <EditForm Model="ModelInstance">
-    <CKEditor @bind-Value="@ModelInstance.Html"></CKEditor>
+    <h3>Default editor</h3>
+    <CKEditor @bind-Value="@ModelInstance.Html"/>
+    <br />
+    <h3>Customized editor</h3>
+    <CKEditor
+        @bind-Value="@ModelInstance.Html"
+        Placeholder="Test placeholder"
+        SwitchToEditorText="Back to editor"
+        SwitchToHtmlText="Edit html"
+        Class="test-class"
+        Style="color:red"
+        TextareaClass="text-area-class"
+        TextareaStyle="color: red"
+        AllowHtmlMode="true"/>
+    <br />
+    <h3>Editor without html mode</h3>
+    <CKEditor @bind-Value="@ModelInstance.Html" AllowHtmlMode="false"/>
+    <br />
+    <h3>Editor with custom html switch</h3>
+    <CKEditor @bind-Value="@ModelInstance.Html">
+        <ModeSwitcherContent Context="modeSwitch">
+            <div
+                style="cursor:pointer;color: @(modeSwitch.CurrentMode == CKEditorMode.Editor ? "blue" : "red")"
+                @onclick="modeSwitch.SwitchModeAsync">
+                Click me!
+            </div>
+        </ModeSwitcherContent>
+    </CKEditor>
 </EditForm>
+<br />
+<h3>Model value</h3>
 <pre>
     @ModelInstance.Html
 </pre>
 
 @code{
     public Model ModelInstance { get; set; } = new Model();
-    
+
 
     public class Model
     {
-        public string Html { get; set; } = "Hello, world!";    
+        public string Html { get; set; } = "Hello, world!";
     }
+
 }
