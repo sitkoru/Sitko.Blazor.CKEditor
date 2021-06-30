@@ -71,7 +71,7 @@ namespace Sitko.Blazor.CKEditor
         public async Task InitializeEditorAsync()
         {
             await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", EditorRef,
-                Options.Value.EditorClassName, _instance, Id);
+                Options.Value.EditorClassName, _instance!, Id);
             _rendered = true;
             _lastValue = CurrentValue;
         }
@@ -97,7 +97,7 @@ namespace Sitko.Blazor.CKEditor
 
         public ValueTask UpdateEditor()
         {
-            return JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.update", Id, CurrentValue);
+            return JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.update", Id, CurrentValue!);
         }
 
         public ValueTask DisposeAsync()
