@@ -32,8 +32,8 @@ namespace Sitko.Blazor.CKEditor.Demo
             //     options.EditorClassName = "ClassicEditor";
             // });
             
-            // Or add CKEditor Bundle with dark theme 
-            //services.AddCKEditorBundle(Configuration, CKEditorTheme.Dark);
+            // Or add CKEditor Bundle
+            //services.AddCKEditorBundle(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
