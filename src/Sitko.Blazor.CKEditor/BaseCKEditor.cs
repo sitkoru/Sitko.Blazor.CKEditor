@@ -9,7 +9,7 @@ namespace Sitko.Blazor.CKEditor
 {
     public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
     {
-        [Inject] protected IOptions<CKEditorOptions> Options { get; set; } = null!;
+        [Inject] protected ICKEditorOptionsProvider OptionsProvider { get; set; } = null!;
         [Inject] protected IJSRuntime JsRuntime { get; set; } = null!;
         [Parameter] public string Placeholder { get; set; } = "Enter text";
         [Parameter] public string Class { get; set; } = "";
@@ -46,15 +46,8 @@ namespace Sitko.Blazor.CKEditor
             {
                 _instance = DotNetObjectReference.Create(this);
                 await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.loadScript",
-                    new
-                    {
-                        scriptPath = Options.Value.ScriptPath,
-                        callback = new
-                        {
-                            instance = DotNetObjectReference.Create(this),
-                            method = nameof(InitializeEditorAsync)
-                        }
-                    });
+                    OptionsProvider.Options.ScriptPath, OptionsProvider.Options.EditorClassName,
+                    new {instance = DotNetObjectReference.Create(this), method = nameof(InitializeEditorAsync)});
             }
         }
 
@@ -71,7 +64,7 @@ namespace Sitko.Blazor.CKEditor
         public async Task InitializeEditorAsync()
         {
             await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", EditorRef,
-                Options.Value.EditorClassName, _instance!, Id);
+                OptionsProvider.Options.EditorClassName, _instance!, Id);
             _rendered = true;
             _lastValue = CurrentValue;
         }

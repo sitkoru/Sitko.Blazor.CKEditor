@@ -7,22 +7,29 @@ namespace Sitko.Blazor.CKEditor.Bundle
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddCKEditorBundle(this IServiceCollection serviceCollection,
-            IConfiguration configuration,
-            CKEditorTheme theme = CKEditorTheme.Light)
+            IConfiguration configuration, Action<CKEditorBundleOptions>? postConfigure = null)
         {
-            serviceCollection.AddCKEditor(configuration, options =>
+            serviceCollection.AddCKEditor<CKEditorBundleOptions>(configuration, "CKEditorBundle", options =>
             {
-                var basePath = $"/_content/{typeof(CKEditorTheme).Assembly.GetName().Name}";
-                options.ScriptPath = theme switch
-                {
-                    CKEditorTheme.Light => $"{basePath}/ckeditor.js",
-                    CKEditorTheme.Dark => $"{basePath}/ckeditor.dark.js",
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-                options.EditorClassName = "BlazorEditor";
+                postConfigure?.Invoke(options);
             });
             return serviceCollection;
         }
+    }
+
+    public class CKEditorBundleOptions : CKEditorOptions
+    {
+        public CKEditorTheme Theme { get; set; } = CKEditorTheme.Light;
+
+        public override string ScriptPath => Theme switch
+        {
+            CKEditorTheme.Light => $"{basePath}/ckeditor.js",
+            CKEditorTheme.Dark => $"{basePath}/ckeditor.dark.js",
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        public override string EditorClassName { get; set; } = "BlazorEditor";
+        private string basePath => $"/_content/{typeof(CKEditorTheme).Assembly.GetName().Name}";
     }
 
     public enum CKEditorTheme

@@ -2,46 +2,51 @@ window.SitkoBlazorCKEditor = {
     loaded: [],
     loading: [],
     editors: [],
-    loadScript: function (scriptArgs) {
+    loadScript: function (scriptPath, scriptKey, callback) {
         // check list - if already loaded we can ignore
-        const scriptPath = scriptArgs.scriptPath;
-        if (this.loaded[scriptPath]) {
-            console.debug(scriptPath + " already loaded");
+        scriptKey ??= scriptPath;
+        if (this.loaded[scriptKey]) {
+            console.debug(scriptKey + " already loaded");
+            if (scriptPath !== this.loaded[scriptKey]) {
+                console.debug(scriptKey + " path changed");
+            }
             // return 'empty' promise
-            return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve) {
                 resolve();
-                if (scriptArgs.callback) {
-                    scriptArgs.callback.instance.invokeMethodAsync(scriptArgs.callback.method, scriptArgs.callback.data);
+                if (callback) {
+                    callback.instance.invokeMethodAsync(callback.method, callback.data);
                 }
             });
         }
 
-        if (this.loading[scriptPath]) {
-            console.debug(scriptPath + " loading");
+        if (this.loading[scriptKey]) {
+            console.debug(scriptKey + " loading");
             // return current promise
-            return this.loading[scriptPath].then(() => {
-                if (scriptArgs.callback) {
-                    scriptArgs.callback.instance.invokeMethodAsync(scriptArgs.callback.method, scriptArgs.callback.data);
+            return this.loading[scriptKey].then(() => {
+                if (callback) {
+                    callback.instance.invokeMethodAsync(callback.method, callback.data);
                 }
             });
         }
 
-        this.loading[scriptPath] = new Promise(function (resolve, reject) {
+        this.loading[scriptKey] = new Promise(function (resolve, reject) {
             // create JS library script element
             const script = document.createElement("script");
             script.src = scriptPath;
             script.type = "text/javascript";
-            console.debug(scriptPath + " created");
+            script.id = scriptKey;
+            console.debug(scriptKey + " start loading");
 
             // if the script returns okay, return resolve
             script.onload = function () {
-                console.debug(scriptPath + " loaded ok");
+                console.debug(scriptKey + " loaded ok");
                 resolve(scriptPath);
-                if (scriptArgs.callback) {
-                    scriptArgs.callback.instance.invokeMethodAsync(scriptArgs.callback.method, scriptArgs.callback.data);
+                if (callback) {
+                    callback.instance.invokeMethodAsync(callback.method, callback.data);
                 }
                 // flag as loaded
-                window.SitkoBlazorCKEditor.loaded[scriptPath] = true;
+                window.SitkoBlazorCKEditor.loaded[scriptKey] = scriptPath;
+                delete window.SitkoBlazorCKEditor.loading[scriptKey];
             };
 
             // if it fails, return reject
