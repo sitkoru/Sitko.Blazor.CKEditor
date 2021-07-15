@@ -1,4 +1,5 @@
 # Sitko.Blazor.CKEditor
+
 ![Nuget](https://img.shields.io/nuget/dt/Sitko.Blazor.CKEditor) ![Nuget](https://img.shields.io/nuget/v/Sitko.Blazor.CKEditor)
 
 CKEditor component for Blazor Applications
@@ -57,6 +58,7 @@ Add to `_Imports.razor`
 ```
 
 # Sitko.Blazor.CKEditor.Bundle
+
 ![Nuget](https://img.shields.io/nuget/dt/Sitko.Blazor.CKEditor.Bundle) ![Nuget](https://img.shields.io/nuget/v/Sitko.Blazor.CKEditor.Bundle)
 
 This package includes basic ckeditor build with light and dark themes. Install:
@@ -68,7 +70,15 @@ dotnet add package Sitko.Blazor.CKEditor.Bundle
 Instead of `AddCKEditor` use:
 
 ```c#
-services.AddCKEditorBundle(Configuration, CKEditorTheme.Dark);
+services.AddCKEditorBundle(Configuration);
 ```
 
+and `appsettings.json`:
 
+```json
+{
+    "CKEditorBundle": {
+        "Theme": "Dark"
+    }
+}
+```
