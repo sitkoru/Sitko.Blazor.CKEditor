@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,8 @@ namespace Sitko.Blazor.CKEditor
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddCKEditor<TOptions>(this IServiceCollection serviceCollection,
+        public static IServiceCollection AddCKEditor<TOptions>(
+            this IServiceCollection serviceCollection,
             IConfiguration configuration,
             string optionsKey = "CKEditor",
             Action<TOptions>? postConfigure = null) where TOptions : CKEditorOptions
@@ -30,7 +32,8 @@ namespace Sitko.Blazor.CKEditor
             IConfiguration configuration,
             Action<CKEditorOptions>? postConfigure = null)
         {
-            return serviceCollection.AddCKEditor<CKEditorOptions>(configuration, postConfigure: postConfigure);
+            return serviceCollection.AddCKEditor<CKEditorOptions>(
+                configuration, postConfigure: postConfigure);
         }
     }
 
@@ -55,5 +58,17 @@ namespace Sitko.Blazor.CKEditor
     {
         [Required] public virtual string ScriptPath { get; set; } = "";
         [Required] public virtual string EditorClassName { get; set; } = "";
+        public virtual CKEditorConfig CKEditorConfig { get; set; }
+    }
+
+    public class CKEditorConfig
+    {
+        public CKEditorToolbar Toolbar { get; set; }
+        public string Language { get; set; }
+    }
+
+    public class CKEditorToolbar
+    {
+        public List<string> Items { get; set; } = new();
     }
 }

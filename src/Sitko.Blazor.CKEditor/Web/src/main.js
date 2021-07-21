@@ -59,9 +59,13 @@ window.SitkoBlazorCKEditor = {
             document["body"].appendChild(script);
         });
     },
-    init: function (element, editorClass, instance, id) {
+    init: function (element, editorClass, instance, id, config) {
+        if(!config){
+            config = {};
+        }
+        console.debug('CKEditor config', config);
         window[editorClass]
-            .create(element, {})
+            .create(element, config)
             .then(editor => {
                 window.SitkoBlazorCKEditor.editors[id] = editor;
                 editor.model.document.on('change:data', () => {

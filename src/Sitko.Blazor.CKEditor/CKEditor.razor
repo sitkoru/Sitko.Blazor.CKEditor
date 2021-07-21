@@ -1,27 +1,9 @@
 @inherits BaseCKEditorComponent
 <div class="blazor-ck-editor @Class" style="@Style">
     <textarea 
-        style="@TextareaStyle" 
-        class="blazor-ck-editor-textarea @TextareaClass" 
         Placeholder="@Placeholder" 
+        style="display: none"
         @ref="EditorRef" 
         @bind="CurrentValue">
     </textarea>
-    @if (AllowHtmlMode)
-    {
-        <div class="blazor-ck-editor-switch_mode">
-            @if (ModeSwitcherContent != null)
-            {
-                @ModeSwitcherContent(ModeSwitcher)
-            }
-            else
-            {
-                <a href="#"
-                   @onclick:preventDefault
-                   @onclick="ModeSwitcher.SwitchModeAsync">
-                    @(ModeSwitcher.CurrentMode == CKEditorMode.Html ? SwitchToEditorText : SwitchToHtmlText)
-                </a>
-            }
-        </div>
-    }
 </div>
