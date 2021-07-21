@@ -1,37 +1,25 @@
 @page "/"
+@using Sitko.Blazor.CKEditor.Bundle
 
 <h1>CKEditor</h1>
 <EditForm Model="ModelInstance">
     <h3>Default editor</h3>
     <CKEditor @bind-Value="@ModelInstance.Html"/>
-    <br />
+    <br/>
     <h3>Customized editor</h3>
     <CKEditor
         @bind-Value="@ModelInstance.Html"
         Placeholder="Test placeholder"
-        SwitchToEditorText="Back to editor"
-        SwitchToHtmlText="Edit html"
         Class="test-class"
-        Style="color:red"
+        Style="background:red"
         TextareaClass="text-area-class"
         TextareaStyle="color: red"
         AllowHtmlMode="true"/>
-    <br />
-    <h3>Editor without html mode</h3>
-    <CKEditor @bind-Value="@ModelInstance.Html" AllowHtmlMode="false"/>
-    <br />
-    <h3>Editor with custom html switch</h3>
-    <CKEditor @bind-Value="@ModelInstance.Html">
-        <ModeSwitcherContent Context="modeSwitch">
-            <div
-                style="cursor:pointer;color: @(modeSwitch.CurrentMode == CKEditorMode.Editor ? "blue" : "red")"
-                @onclick="modeSwitch.SwitchModeAsync">
-                Click me!
-            </div>
-        </ModeSwitcherContent>
-    </CKEditor>
+    <br/>
+    <h3>Editor with html mode</h3>
+    <CKEditor Config="_config" @bind-Value="@ModelInstance.Html" AllowHtmlMode="false"/>
 </EditForm>
-<br />
+<br/>
 <h3>Model value</h3>
 <pre>
     @ModelInstance.Html
@@ -40,10 +28,30 @@
 @code{
     public Model ModelInstance { get; set; } = new Model();
 
+    public Index()
+    {
+        _config = CKEditorBundleOptions.DefaultConfig;
+        _config.Toolbar.Items = new List<string>
+        {
+            "sourceEditing",
+            "|",
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "undo",
+            "redo"
+        };
+    }
+
 
     public class Model
     {
         public string Html { get; set; } = "Hello, world!";
     }
 
+    private readonly CKEditorConfig _config;
 }
