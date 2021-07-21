@@ -14,6 +14,8 @@ import Indent from '@ckeditor/ckeditor5-indent/src/indent';
 import Link from '@ckeditor/ckeditor5-link/src/link';
 import List from '@ckeditor/ckeditor5-list/src/list';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport';
+import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
 
 export default class BlazorEditor extends ClassicEditorBase {
 }
@@ -27,7 +29,9 @@ BlazorEditor.builtinPlugins = [
     Indent,
     Link,
     List,
-    Paragraph
+    Paragraph,
+    GeneralHtmlSupport,
+    SourceEditing
 ];
 
 // Editor configuration.
@@ -45,6 +49,6 @@ BlazorEditor.defaultConfig = {
             'redo'
         ]
     },
-    // This value must be kept in sync with the language defined in webpack.config.js.
-    language: 'ru'
+    //This value must be kept in sync with the language defined in webpack.config.js.
+    language: 'en'
 };

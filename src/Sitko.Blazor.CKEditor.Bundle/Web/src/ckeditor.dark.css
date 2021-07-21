@@ -106,3 +106,12 @@
 
     --ck-color-link-default: hsl(190, 100%, 75%);
 }
+
+.ck-source-editing-area textarea {
+    background: var(--ck-color-base-background);
+    color: var(--ck-color-text);
+}
+
+.ck.ck-content {
+    color: var(--ck-color-text);
+}
