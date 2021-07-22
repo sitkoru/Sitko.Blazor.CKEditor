@@ -9,9 +9,9 @@ namespace Sitko.Blazor.CKEditor
     public class CKEditorConfig
     {
         public string? InitialData { get; set; }
-        public string Language { get; set; } = "en";
+        public string? Language { get; set; }
         public string? Placeholder { get; set; }
-        public CKEditorToolbar Toolbar { get; set; } = new();
+        public CKEditorToolbar? Toolbar { get; set; }
     }
 
     [PublicAPI]

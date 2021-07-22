@@ -6,6 +6,7 @@ using Microsoft.JSInterop;
 
 namespace Sitko.Blazor.CKEditor
 {
+    using System.Text.Json;
     using JetBrains.Annotations;
 
     [PublicAPI]
@@ -50,7 +51,11 @@ namespace Sitko.Blazor.CKEditor
         {
             await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", EditorRef,
                 OptionsProvider.Options.EditorClassName, instance!, Id,
-                Config ?? OptionsProvider.Options.CKEditorConfig);
+                JsonSerializer.Serialize(Config ?? OptionsProvider.Options.CKEditorConfig,
+                    new JsonSerializerOptions
+                    {
+                        IgnoreNullValues = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    }));
             rendered = true;
             lastValue = CurrentValue;
         }
