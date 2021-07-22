@@ -30,21 +30,7 @@
 
     public Index()
     {
-        _config = CKEditorBundleOptions.DefaultConfig;
-        _config.Toolbar.Items = new List<string>
-        {
-            "sourceEditing",
-            "|",
-            "heading",
-            "|",
-            "bold",
-            "italic",
-            "link",
-            "bulletedList",
-            "numberedList",
-            "undo",
-            "redo"
-        };
+        _config = CKEditorBundleOptions.DefaultConfig.WithHtmlEditing();
     }
 
 
