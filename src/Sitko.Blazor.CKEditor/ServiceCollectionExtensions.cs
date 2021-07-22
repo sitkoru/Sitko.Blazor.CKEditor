@@ -4,6 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Sitko.Blazor.CKEditor
 {
+    using JetBrains.Annotations;
+
+    [PublicAPI]
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddCKEditor<TOptions>(
@@ -27,10 +30,8 @@ namespace Sitko.Blazor.CKEditor
 
         public static IServiceCollection AddCKEditor(this IServiceCollection serviceCollection,
             IConfiguration configuration,
-            Action<CKEditorOptions>? postConfigure = null)
-        {
-            return serviceCollection.AddCKEditor<CKEditorOptions>(
+            Action<CKEditorOptions>? postConfigure = null) =>
+            serviceCollection.AddCKEditor<CKEditorOptions>(
                 configuration, postConfigure: postConfigure);
-        }
     }
 }

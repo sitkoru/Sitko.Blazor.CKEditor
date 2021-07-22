@@ -6,6 +6,9 @@ using Microsoft.JSInterop;
 
 namespace Sitko.Blazor.CKEditor
 {
+    using JetBrains.Annotations;
+
+    [PublicAPI]
     public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
     {
         [Inject] protected ICKEditorOptionsProvider OptionsProvider { get; set; } = null!;
@@ -15,18 +18,18 @@ namespace Sitko.Blazor.CKEditor
         [Parameter] public string Style { get; set; } = "";
 
         [Parameter] public CKEditorConfig? Config { get; set; }
-        private IDisposable? _instance;
+        private IDisposable? instance;
         protected ElementReference EditorRef { get; set; }
-        public readonly Guid Id = Guid.NewGuid();
-        private bool _rendered;
-        private string? _lastValue;
+        public Guid Id { get; } = Guid.NewGuid();
+        private bool rendered;
+        private string? lastValue;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                _instance = DotNetObjectReference.Create(this);
+                instance = DotNetObjectReference.Create(this);
                 await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.loadScript",
                     OptionsProvider.Options.ScriptPath, OptionsProvider.Options.EditorClassName,
                     new {instance = DotNetObjectReference.Create(this), method = nameof(InitializeEditorAsync)});
@@ -36,7 +39,7 @@ namespace Sitko.Blazor.CKEditor
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            if (_rendered && _lastValue != CurrentValue)
+            if (rendered && lastValue != CurrentValue)
             {
                 await UpdateEditor();
             }
@@ -46,35 +49,33 @@ namespace Sitko.Blazor.CKEditor
         public async Task InitializeEditorAsync()
         {
             await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", EditorRef,
-                OptionsProvider.Options.EditorClassName, _instance!, Id,
+                OptionsProvider.Options.EditorClassName, instance!, Id,
                 Config ?? OptionsProvider.Options.CKEditorConfig);
-            _rendered = true;
-            _lastValue = CurrentValue;
+            rendered = true;
+            lastValue = CurrentValue;
         }
 
 
         protected ValueTask DestroyEditor()
         {
-            _rendered = false;
+            rendered = false;
             return JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.destroy", Id);
         }
 
         [JSInvokable]
         public Task<bool> UpdateText(string editorText)
         {
-            _lastValue = editorText;
+            lastValue = editorText;
             CurrentValue = editorText;
             return Task.FromResult(true);
         }
 
-        public ValueTask UpdateEditor()
-        {
-            return JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.update", Id, CurrentValue!);
-        }
+        public ValueTask UpdateEditor() =>
+            JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.update", Id, CurrentValue!);
 
         public ValueTask DisposeAsync()
         {
-            _instance?.Dispose();
+            instance?.Dispose();
             return DestroyEditor();
         }
     }
