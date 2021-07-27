@@ -1,3 +1,7 @@
+import {config} from 'config';
+import * as log from 'loglevel';
+
+log.setLevel(config.logLevel);
 window.SitkoBlazorCKEditor = {
   loaded: [],
   loading: [],
@@ -6,9 +10,9 @@ window.SitkoBlazorCKEditor = {
     // check list - if already loaded we can ignore
     scriptKey ??= scriptPath;
     if (this.loaded[scriptKey]) {
-      console.debug(scriptKey + " already loaded");
+      log.debug(scriptKey + " already loaded");
       if (scriptPath !== this.loaded[scriptKey]) {
-        console.debug(scriptKey + " path changed");
+        log.debug(scriptKey + " path changed");
       }
       // return 'empty' promise
       return new Promise(function (resolve) {
@@ -20,7 +24,7 @@ window.SitkoBlazorCKEditor = {
     }
 
     if (this.loading[scriptKey]) {
-      console.debug(scriptKey + " loading");
+      log.debug(scriptKey + " loading");
       // return current promise
       return this.loading[scriptKey].then(() => {
         if (callback) {
@@ -35,11 +39,11 @@ window.SitkoBlazorCKEditor = {
       script.src = scriptPath;
       script.type = "text/javascript";
       script.id = scriptKey;
-      console.debug(scriptKey + " start loading");
+      log.debug(scriptKey + " start loading");
 
       // if the script returns okay, return resolve
       script.onload = function () {
-        console.debug(scriptKey + " loaded ok");
+        log.debug(scriptKey + " loaded ok");
         resolve(scriptPath);
         if (callback) {
           callback.instance.invokeMethodAsync(callback.method, callback.data);
@@ -51,7 +55,7 @@ window.SitkoBlazorCKEditor = {
 
       // if it fails, return reject
       script.onerror = function () {
-        console.debug(scriptPath + " load failed");
+        log.debug(scriptPath + " load failed");
         reject(scriptPath);
       }
 
@@ -64,7 +68,7 @@ window.SitkoBlazorCKEditor = {
     if (configJson) {
       config = JSON.parse(configJson);
     }
-    console.debug('CKEditor config', config);
+    log.debug('CKEditor config', config);
     window[editorClass]
       .create(element, config)
       .then(editor => {
@@ -74,7 +78,7 @@ window.SitkoBlazorCKEditor = {
         });
       })
       .catch(error => {
-        console.error(error);
+        log.error('Error initializing CKEditor', error);
       });
   },
   update: function (id, content) {
