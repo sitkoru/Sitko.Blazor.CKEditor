@@ -66,7 +66,7 @@ window.SitkoBlazorCKEditor = {
   init: function (element, editorClass, instance, id, configJson) {
     let config = {};
     if (configJson) {
-      config = JSON.parse(configJson);
+      config = JSON.parse(configJson) ?? {};
     }
     log.debug('CKEditor config', config);
     window[editorClass]
