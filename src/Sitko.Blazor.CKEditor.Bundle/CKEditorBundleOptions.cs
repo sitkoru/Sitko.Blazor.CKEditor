@@ -37,6 +37,17 @@
 
         public override string EditorClassName { get; set; } = "BlazorEditor";
         private string BasePath => $"/_content/{typeof(CKEditorTheme).Assembly.GetName().Name}";
+
+        public override Dictionary<string, string> GetAdditionalScripts(CKEditorConfig? config)
+        {
+            var scripts = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(config?.Language) && config.Language != DefaultConfig.Language)
+            {
+                scripts.Add("BlazorEditorLang", $"{BasePath}/translations/{config.Language}.js");
+            }
+
+            return scripts;
+        }
     }
 
     public enum CKEditorTheme
