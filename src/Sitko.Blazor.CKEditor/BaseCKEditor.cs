@@ -43,7 +43,7 @@ namespace Sitko.Blazor.CKEditor
             await base.OnParametersSetAsync();
             if (Value != EditorValue)
             {
-                EditorValue = Value;
+                EditorValue = Value ?? "";
                 if (rendered)
                 {
                     await UpdateEditorAsync();
