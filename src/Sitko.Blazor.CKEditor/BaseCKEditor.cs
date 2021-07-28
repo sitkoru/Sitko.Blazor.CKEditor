@@ -95,15 +95,15 @@ namespace Sitko.Blazor.CKEditor
         }
 
         [JSInvokable]
-        public async Task<bool> UpdateText(string editorText)
+        public Task UpdateText(string editorText)
         {
             if (EditorValue != editorText)
             {
                 EditorValue = editorText;
-                await ValueChanged.InvokeAsync(EditorValue);
+                CurrentValue = EditorValue;
             }
 
-            return true;
+            return Task.CompletedTask;
         }
 
         private async ValueTask UpdateEditorAsync() =>
