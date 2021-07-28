@@ -19,7 +19,6 @@ import Indent from '@ckeditor/ckeditor5-indent/src/indent.js';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic.js';
 import Link from '@ckeditor/ckeditor5-link/src/link.js';
 import List from '@ckeditor/ckeditor5-list/src/list.js';
-import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown.js';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat.js';
 import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting.js';
@@ -57,7 +56,6 @@ BlazorEditor.builtinPlugins = [
   Italic,
   Link,
   List,
-  Markdown,
   Paragraph,
   RemoveFormat,
   SourceEditing,
