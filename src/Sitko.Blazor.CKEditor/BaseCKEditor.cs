@@ -14,6 +14,8 @@ namespace Sitko.Blazor.CKEditor
     {
         [Inject] protected ICKEditorOptionsProvider OptionsProvider { get; set; } = null!;
         [Inject] protected IJSRuntime JsRuntime { get; set; } = null!;
+        [Inject] protected IScriptInjector ScriptInjector { get; set; } = null!;
+        [Inject] protected ILogger<BaseCKEditorComponent> Logger { get; set; } = null!;
         [Parameter] public string Placeholder { get; set; } = "Enter text";
         [Parameter] public string Class { get; set; } = "";
         [Parameter] public string Style { get; set; } = "";
@@ -31,34 +33,35 @@ namespace Sitko.Blazor.CKEditor
             if (firstRender)
             {
                 instance = DotNetObjectReference.Create(this);
-                await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.loadScript",
-                    OptionsProvider.Options.ScriptPath, OptionsProvider.Options.EditorClassName,
-                    new {instance = DotNetObjectReference.Create(this), method = nameof(InitializeEditorAsync)});
+                var scripts = new List<ScriptInjectRequest>
+                {
+                    ScriptInjectRequest.FromResource("BlazorCkEditor", GetType().Assembly, "ckeditor.js"),
+                    ScriptInjectRequest.FromUrl(OptionsProvider.Options.EditorClassName,
+                        OptionsProvider.Options.ScriptPath)
+                };
+                var config = GetConfig();
+                foreach (var (key, path) in OptionsProvider.Options.GetAdditionalScripts(config))
+                {
+                    scripts.Add(ScriptInjectRequest.FromUrl(key, path));
+                }
+
+                await ScriptInjector.InjectAsync(scripts, InitializeEditorAsync);
             }
         }
 
-        protected override async Task OnParametersSetAsync()
+        private async Task InitializeEditorAsync(CancellationToken cancellationToken)
         {
-            await base.OnParametersSetAsync();
-            if (rendered && lastValue != CurrentValue)
-            {
-                await UpdateEditor();
-            }
-        }
-
-        [JSInvokable]
-        public async Task InitializeEditorAsync()
-        {
-            await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", EditorRef,
+            await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", cancellationToken, EditorRef,
                 OptionsProvider.Options.EditorClassName, instance!, Id,
-                JsonSerializer.Serialize(Config ?? OptionsProvider.Options.CKEditorConfig,
+                JsonSerializer.Serialize(GetConfig(),
                     new JsonSerializerOptions
                     {
                         IgnoreNullValues = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                     }));
             rendered = true;
-            lastValue = CurrentValue;
         }
+
+        private CKEditorConfig? GetConfig() => Config ?? OptionsProvider.Options.CKEditorConfig;
 
 
         protected ValueTask DestroyEditor()

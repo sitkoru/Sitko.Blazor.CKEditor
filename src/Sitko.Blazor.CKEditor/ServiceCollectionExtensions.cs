@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Sitko.Blazor.CKEditor
 {
     using JetBrains.Annotations;
+    using ScriptInjector;
 
     [PublicAPI]
     public static class ServiceCollectionExtensions
@@ -22,7 +23,7 @@ namespace Sitko.Blazor.CKEditor
             }
 
             serviceCollection.AddTransient<ICKEditorOptionsProvider, CKEditorOptionsProvider<TOptions>>();
-
+            serviceCollection.AddScriptInjector();
             builder.ValidateDataAnnotations();
 
             return serviceCollection;

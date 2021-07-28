@@ -22,6 +22,7 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Sitko.Blazor.ScriptInjector" Version="1.0.0" />
 
   </ItemGroup>
 
@@ -42,5 +43,7 @@
     <None Include="..\..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
     <None Include="..\..\packageIcon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
-  
+  <ItemGroup>
+    <EmbeddedResource Include="ckeditor.js" />
+  </ItemGroup>
 </Project>

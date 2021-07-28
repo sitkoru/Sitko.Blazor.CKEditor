@@ -2,6 +2,7 @@
 
 namespace Sitko.Blazor.CKEditor
 {
+    using System.Collections.Generic;
     using JetBrains.Annotations;
 
     [PublicAPI]
@@ -10,5 +11,7 @@ namespace Sitko.Blazor.CKEditor
         [Required] public virtual string ScriptPath { get; set; } = "";
         [Required] public virtual string EditorClassName { get; set; } = "";
         public virtual CKEditorConfig? CKEditorConfig { get; set; }
+
+        public virtual Dictionary<string, string> GetAdditionalScripts(CKEditorConfig? config) => new();
     }
 }
