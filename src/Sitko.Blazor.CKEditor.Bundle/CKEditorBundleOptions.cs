@@ -15,17 +15,33 @@
             {
                 Items = new List<string>
                 {
+                    "undo",
+                    "redo",
+                    "|",
                     "heading",
                     "|",
                     "bold",
                     "italic",
-                    "link",
+                    "strikethrough",
+                    "underline",
+                    "subscript",
+                    "superscript",
+                    "alignment",
+                    "|",
                     "bulletedList",
                     "numberedList",
-                    "undo",
-                    "redo"
+                    "|",
+                    "insertTable",
+                    "link",
+                    "code",
+                    "codeBlock",
+                    "horizontalLine",
+                    "specialCharacters",
+                    "|",
+                    "removeFormat"
                 }
-            }
+            },
+            Language = "en"
         };
 
         public override string ScriptPath => Theme switch
