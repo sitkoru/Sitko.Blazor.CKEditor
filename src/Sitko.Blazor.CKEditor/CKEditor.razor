@@ -1,9 +1,9 @@
 @inherits BaseCKEditorComponent
-<div class="blazor-ck-editor @Class" style="@Style">
-    <textarea 
-        Placeholder="@Placeholder" 
+<div class="blazor-ck-editor @Class" id="@Id" style="@Style">
+    <textarea
+        Placeholder="@Placeholder"
         style="display: none"
-        @ref="EditorRef" 
-        @bind="CurrentValue">
-    </textarea>
+        @ref="EditorRef">
+@EditorValue
+</textarea>
 </div>

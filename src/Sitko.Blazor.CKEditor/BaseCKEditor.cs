@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 
 namespace Sitko.Blazor.CKEditor
 {
+    using System.Collections.Generic;
     using System.Text.Json;
+    using System.Threading;
     using JetBrains.Annotations;
+    using Microsoft.AspNetCore.Components.Forms;
+    using Microsoft.Extensions.Logging;
+    using ScriptInjector;
 
     [PublicAPI]
     public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
     {
+        private IDisposable? instance;
+        private bool rendered;
+        protected string EditorValue { get; private set; } = "";
         [Inject] protected ICKEditorOptionsProvider OptionsProvider { get; set; } = null!;
         [Inject] protected IJSRuntime JsRuntime { get; set; } = null!;
         [Inject] protected IScriptInjector ScriptInjector { get; set; } = null!;
@@ -21,11 +28,28 @@ namespace Sitko.Blazor.CKEditor
         [Parameter] public string Style { get; set; } = "";
 
         [Parameter] public CKEditorConfig? Config { get; set; }
-        private IDisposable? instance;
+
         protected ElementReference EditorRef { get; set; }
         public Guid Id { get; } = Guid.NewGuid();
-        private bool rendered;
-        private string? lastValue;
+
+        public ValueTask DisposeAsync()
+        {
+            instance?.Dispose();
+            return DestroyEditor();
+        }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            await base.OnParametersSetAsync();
+            if (Value != EditorValue)
+            {
+                EditorValue = Value;
+                if (rendered)
+                {
+                    await UpdateEditorAsync();
+                }
+            }
+        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -71,20 +95,18 @@ namespace Sitko.Blazor.CKEditor
         }
 
         [JSInvokable]
-        public Task<bool> UpdateText(string editorText)
+        public async Task<bool> UpdateText(string editorText)
         {
-            lastValue = editorText;
-            CurrentValue = editorText;
-            return Task.FromResult(true);
+            if (EditorValue != editorText)
+            {
+                EditorValue = editorText;
+                await ValueChanged.InvokeAsync(EditorValue);
+            }
+
+            return true;
         }
 
-        public ValueTask UpdateEditor() =>
-            JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.update", Id, CurrentValue!);
-
-        public ValueTask DisposeAsync()
-        {
-            instance?.Dispose();
-            return DestroyEditor();
-        }
+        private async ValueTask UpdateEditorAsync() =>
+            await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.update", Id, EditorValue);
     }
 }
