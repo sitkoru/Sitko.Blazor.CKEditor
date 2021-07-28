@@ -33,12 +33,6 @@ jobs:
                 uses: actions/setup-dotnet@v1.8.1
                 with:
                     dotnet-version: '5.0.x'
-            -   name: Build main js
-                working-directory: src/${{ env.PROJECT }}/Web
-                shell: bash
-                run: |
-                    npm ci
-                    npm run prod
             -   name: Build bundle js
                 working-directory: src/${{ env.BUNDLE_PROJECT }}/Web
                 shell: bash
