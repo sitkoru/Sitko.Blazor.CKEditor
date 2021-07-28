@@ -37,14 +37,6 @@ services.AddCKEditor(Configuration, options =>
 });
 ```
 
-Add to `_Host.cshtml`
-
-```c#
-<script src="_content/Sitko.Blazor.CKEditor/Sitko.Blazor.CKEditor.js"></script>
-```
-
-before `_framework/blazor.server.js`
-
 Add to `_Imports.razor`
 
 ```c#
