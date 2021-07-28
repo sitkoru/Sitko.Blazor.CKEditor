@@ -12,6 +12,7 @@
     <Summary>Sitko.Blazor.CKEditor is Blazor wrapper for CKEditor with bundled CKEditor build</Summary>
     <Copyright>Copyright © Sitko.ru 2021</Copyright>
     <RepositoryUrl>https://github.com/sitkoru/Sitko.Blazor.CKEditor</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/sitkoru/Sitko.Blazor.CKEditor</PackageProjectUrl>
     <PackageIcon>packageIcon.png</PackageIcon>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
