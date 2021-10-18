@@ -14,7 +14,7 @@ jobs:
       BUNDLE_PROJECT: Sitko.Blazor.CKEditor.Bundle
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - name: Prepare
         id: prep
         shell: bash
