@@ -22,7 +22,7 @@ jobs:
           VERSION=${GITHUB_REF#refs/tags/}
           echo ::set-output name=version::${VERSION}
       - name: Install node.js
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v2.5.0
         with:
           node-version: '15'
       - name: Install .NET Core 3.1
