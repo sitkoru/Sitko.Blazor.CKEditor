@@ -1,17 +1,18 @@
-﻿using Microsoft.Extensions.Options;
+﻿namespace Sitko.Blazor.CKEditor;
 
-namespace Sitko.Blazor.CKEditor
+using Microsoft.Extensions.Options;
+
+public interface ICKEditorOptionsProvider
 {
-    public interface ICKEditorOptionsProvider
-    {
-        CKEditorOptions Options { get; }
-    }
+    CKEditorOptions Options { get; }
+}
 
-    public class CKEditorOptionsProvider<TOptions> : ICKEditorOptionsProvider where TOptions : CKEditorOptions
-    {
-        private readonly IOptionsMonitor<TOptions> optionsMonitor;
-        public CKEditorOptions Options => optionsMonitor.CurrentValue;
+public class CKEditorOptionsProvider<TOptions> : ICKEditorOptionsProvider where TOptions : CKEditorOptions
+{
+    private readonly IOptionsMonitor<TOptions> optionsMonitor;
 
-        public CKEditorOptionsProvider(IOptionsMonitor<TOptions> optionsMonitor) => this.optionsMonitor = optionsMonitor;
-    }
+    public CKEditorOptionsProvider(IOptionsMonitor<TOptions> optionsMonitor) =>
+        this.optionsMonitor = optionsMonitor;
+
+    public CKEditorOptions Options => optionsMonitor.CurrentValue;
 }
