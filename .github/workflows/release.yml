@@ -25,11 +25,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - name: Install .NET 8.0.x
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-          include-prerelease: true
       - name: Build bundle js
         working-directory: src/${{ env.BUNDLE_PROJECT }}/Web
         shell: bash
