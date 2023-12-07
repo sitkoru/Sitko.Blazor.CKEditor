@@ -10,10 +10,10 @@ CKEditor component for Blazor Applications
 dotnet add package Sitko.Blazor.CKEditor
 ```
 
-Register in DI and configure in `Startup.cs`
+Register in DI and configure in `Program.cs`
 
 ```c#
-services.AddCKEditor(Configuration);
+builder.Services.AddCKEditor(builder.Configuration);
 ```
 
 and `appsettings.json`:
@@ -21,7 +21,6 @@ and `appsettings.json`:
 ```json
 {
     "CKEditor": {
-        "ScriptPath": "https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js",
         "EditorClassName": "ClassicEditor"
     }
 }
@@ -32,10 +31,17 @@ Or in code:
 ```c#
 services.AddCKEditor(Configuration, options =>
 {
-    options.ScriptPath = "https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js";
     options.EditorClassName = "ClassicEditor";
 });
 ```
+
+Add to `App.razor`
+
+```html
+<script src="_content/Sitko.Blazor.CKEditor/ckeditor.js"></script>
+```
+
+**Don't forget to link ckeditor js/css files**
 
 Add to `_Imports.razor`
 
@@ -62,15 +68,35 @@ dotnet add package Sitko.Blazor.CKEditor.Bundle
 Instead of `AddCKEditor` use:
 
 ```c#
-services.AddCKEditorBundle(Configuration);
+builder.Services.AddCKEditorBundle(builder.Configuration);
 ```
 
-and `appsettings.json`:
+and no `appsettings.json` config
 
-```json
-{
-    "CKEditorBundle": {
-        "Theme": "Dark"
-    }
-}
+Also to `App.razor` styles
+
+```html
+
+<link href="_content/Sitko.Blazor.CKEditor.Bundle/ckeditor.css" rel="stylesheet"/>
+```
+
+or
+
+```html
+
+<link href="_content/Sitko.Blazor.CKEditor.Bundle/ckeditor.dark.css" rel="stylesheet"/>
+```
+
+and scripts
+
+```html
+
+<script src="_content/Sitko.Blazor.CKEditor.Bundle/ckeditor.js"></script>
+```
+
+or
+
+```html
+
+<script src="_content/Sitko.Blazor.CKEditor.Bundle/ckeditor.dark.js"></script>
 ```

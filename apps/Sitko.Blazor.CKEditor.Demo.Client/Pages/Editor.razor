@@ -1,5 +1,8 @@
-@page "/"
+﻿@page "/editor"
 @using Sitko.Blazor.CKEditor.Bundle
+@rendermode InteractiveAuto
+
+<PageTitle>Editor</PageTitle>
 
 <h1>CKEditor</h1>
 <EditForm Model="ModelInstance">
@@ -14,7 +17,7 @@
         Style="background:red"/>
     <br/>
     <h3>Editor with html mode</h3>
-    <CKEditor Config="_config" @bind-Value="@ModelInstance.Html" AllowHtmlMode="false"/>
+    <CKEditor Config="@config" @bind-Value="@ModelInstance.Html" AllowHtmlMode="false"/>
 </EditForm>
 <br/>
 <h3>Model value</h3>
@@ -23,18 +26,19 @@
 </pre>
 
 @code{
-    public Model ModelInstance { get; set; } = new Model();
-
-    public Index()
-    {
-        _config = CKEditorBundleOptions.DefaultConfig.WithHtmlEditing();
-    }
-
+    public Model ModelInstance { get; set; } = new();
 
     public class Model
     {
         public string Html { get; set; } = "Hello, world!";
     }
 
-    private readonly CKEditorConfig _config;
+    private CKEditorConfig config;
+
+    public Editor()
+    {
+        config = CKEditorBundleOptions.DefaultConfig.WithHtmlEditing();
+        config.Language = "ru";
+    }
+
 }
