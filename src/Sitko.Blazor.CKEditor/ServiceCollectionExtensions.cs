@@ -4,6 +4,7 @@ using System;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ScriptInjector;
 
 [PublicAPI]
 public static class ServiceCollectionExtensions
@@ -20,7 +21,9 @@ public static class ServiceCollectionExtensions
             builder.PostConfigure(postConfigure);
         }
 
+        serviceCollection.AddScoped<ICKEditorLoader, CKEditorLoader>();
         serviceCollection.AddTransient<ICKEditorOptionsProvider, CKEditorOptionsProvider<TOptions>>();
+        serviceCollection.AddScriptInjector();
         builder.ValidateDataAnnotations();
 
         return serviceCollection;

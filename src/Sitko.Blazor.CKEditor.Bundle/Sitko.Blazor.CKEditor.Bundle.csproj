@@ -32,4 +32,81 @@
     <None Include="..\..\LICENSE.md" Pack="true" PackagePath="LICENSE.md"/>
     <None Include="..\..\packageIcon.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\translations\af.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ar.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ast.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\az.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\bg.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\bn.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\bs.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ca.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\cs.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\da.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\de-ch.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\de.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\el.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\en-au.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\en-gb.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\eo.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\es-co.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\es.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\et.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\eu.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\fa.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\fi.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\fr.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\gl.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\gu.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\he.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\hi.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\hr.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\hu.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\hy.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\id.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\it.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ja.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\jv.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\kk.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\km.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\kn.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ko.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ku.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\lt.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\lv.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ms.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\nb.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ne.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\nl.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\no.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\oc.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\pl.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\pt-br.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\pt.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ro.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ru.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\si.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\sk.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\sl.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\sq.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\sr-latn.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\sr.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\sv.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\th.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\tk.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\tr.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\tt.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ug.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\uk.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\ur.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\uz.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\vi.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\zh-cn.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\translations\zh.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
 </Project>

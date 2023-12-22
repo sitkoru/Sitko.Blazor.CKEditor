@@ -1,6 +1,7 @@
 ﻿namespace Sitko.Blazor.CKEditor;
 
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+using ScriptInjector;
 
 [PublicAPI]
 public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
@@ -24,8 +26,10 @@ public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
 
     private bool rendered;
     protected string EditorValue { get; private set; } = "";
+    [Inject] protected ICKEditorLoader CKEditorLoader { get; set; } = null!;
     [Inject] protected ICKEditorOptionsProvider OptionsProvider { get; set; } = null!;
     [Inject] protected IJSRuntime JsRuntime { get; set; } = null!;
+    [Inject] protected IScriptInjector ScriptInjector { get; set; } = null!;
     [Inject] protected ILogger<BaseCKEditorComponent> Logger { get; set; } = null!;
     [Parameter] public string Placeholder { get; set; } = "Enter text";
     [Parameter] public string Class { get; set; } = "";
@@ -62,7 +66,21 @@ public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
         if (firstRender)
         {
             instance = DotNetObjectReference.Create(this);
-            await InitializeEditorAsync(CancellationToken.None);
+
+            await CKEditorLoader.LoadAsync();
+
+            var config = GetConfig();
+            var scripts = new List<InjectRequest>
+            {
+                CssInjectRequest.FromUrl($"{OptionsProvider.Options.EditorClassName}Css",
+                    OptionsProvider.Options.StylePath)
+            };
+            foreach (var (key, path) in OptionsProvider.Options.GetAdditionalScripts(config))
+            {
+                scripts.Add(ScriptInjectRequest.FromUrl(key, path));
+            }
+
+            await ScriptInjector.InjectAsync(scripts, InitializeEditorAsync);
         }
     }
 
