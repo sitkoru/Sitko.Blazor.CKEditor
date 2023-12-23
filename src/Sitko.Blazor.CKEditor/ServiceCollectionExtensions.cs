@@ -21,7 +21,6 @@ public static class ServiceCollectionExtensions
             builder.PostConfigure(postConfigure);
         }
 
-        serviceCollection.AddScoped<ICKEditorLoader, CKEditorLoader>();
         serviceCollection.AddTransient<ICKEditorOptionsProvider, CKEditorOptionsProvider<TOptions>>();
         serviceCollection.AddScriptInjector();
         builder.ValidateDataAnnotations();

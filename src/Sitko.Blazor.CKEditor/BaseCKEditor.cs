@@ -26,7 +26,6 @@ public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
 
     private bool rendered;
     protected string EditorValue { get; private set; } = "";
-    [Inject] protected ICKEditorLoader CKEditorLoader { get; set; } = null!;
     [Inject] protected ICKEditorOptionsProvider OptionsProvider { get; set; } = null!;
     [Inject] protected IJSRuntime JsRuntime { get; set; } = null!;
     [Inject] protected IScriptInjector ScriptInjector { get; set; } = null!;
@@ -67,11 +66,13 @@ public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
         {
             instance = DotNetObjectReference.Create(this);
 
-            await CKEditorLoader.LoadAsync();
-
             var config = GetConfig();
             var scripts = new List<InjectRequest>
             {
+                ScriptInjectRequest.FromResource("BlazorCkEditor", GetType().Assembly, "ckeditor.js",
+                    InjectScope.Scoped),
+                ScriptInjectRequest.FromUrl(OptionsProvider.Options.EditorClassName,
+                    OptionsProvider.Options.ScriptPath, InjectScope.Scoped),
                 CssInjectRequest.FromUrl($"{OptionsProvider.Options.EditorClassName}Css",
                     OptionsProvider.Options.StylePath)
             };
