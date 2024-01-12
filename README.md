@@ -21,6 +21,7 @@ and `appsettings.json`:
 ```json
 {
     "CKEditor": {
+        "ScriptPath": "https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js",
         "EditorClassName": "ClassicEditor"
     }
 }
@@ -31,9 +32,32 @@ Or in code:
 ```c#
 services.AddCKEditor(Configuration, options =>
 {
+    options.ScriptPath = "https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js";
     options.EditorClassName = "ClassicEditor";
 });
 ```
+
+If you have custom build or separate css file - configure it via StylePath:
+
+```json
+{
+    "CKEditor": {
+        "ScriptPath": "/ckeditor/ckeditor.js",
+        "StylePath": "/ckeditor/ckeditor.css",
+        "EditorClassName": "ClassicEditor"
+    }
+}
+```
+```c#
+services.AddCKEditor(Configuration, options =>
+{
+    options.ScriptPath = "/ckeditor/ckeditor.js";
+    options.StylePath = "/ckeditor/ckeditor.css";
+    options.EditorClassName = "ClassicEditor";
+});
+```
+
+**It is recommended to use separate css file with new blazor navigation and Auto render mode.** 
 
 Add to `App.razor`
 
@@ -71,32 +95,12 @@ Instead of `AddCKEditor` use:
 builder.Services.AddCKEditorBundle(builder.Configuration);
 ```
 
-and no `appsettings.json` config
+and to `appsettings.json` 
 
-Also to `App.razor` styles
-
-```html
-
-<link href="_content/Sitko.Blazor.CKEditor.Bundle/ckeditor.css" rel="stylesheet"/>
-```
-
-or
-
-```html
-
-<link href="_content/Sitko.Blazor.CKEditor.Bundle/ckeditor.dark.css" rel="stylesheet"/>
-```
-
-and scripts
-
-```html
-
-<script src="_content/Sitko.Blazor.CKEditor.Bundle/ckeditor.js"></script>
-```
-
-or
-
-```html
-
-<script src="_content/Sitko.Blazor.CKEditor.Bundle/ckeditor.dark.js"></script>
+```json
+{
+    "CKEditorBundle": {
+        "Theme": "Dark"
+    }
+}
 ```
