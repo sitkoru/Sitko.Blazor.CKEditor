@@ -14,7 +14,7 @@
         @bind-Value="@ModelInstance.Html"
         Placeholder="Test placeholder"
         Class="test-class"
-        Style="background:red"/>
+        Style="background:red" Config="@configCustom"/>
     <br/>
     <h3>Editor with html mode</h3>
     <CKEditor Config="@config" @bind-Value="@ModelInstance.Html" AllowHtmlMode="false"/>
@@ -34,11 +34,26 @@
     }
 
     private CKEditorConfig config;
+    private CKEditorConfig configCustom;
 
     public Editor()
     {
         config = CKEditorBundleOptions.DefaultConfig.WithHtmlEditing();
         config.Language = "ru";
+
+        configCustom = CKEditorBundleOptions.DefaultConfig;
+        configCustom.Toolbar = new CKEditorToolbar
+        {
+            Items =
+            [
+                "bold",
+                "italic",
+                "strikethrough",
+                "underline",
+                "|",
+                "removeFormat"
+            ]
+        };
     }
 
 }
