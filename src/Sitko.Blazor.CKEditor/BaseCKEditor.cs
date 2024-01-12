@@ -67,21 +67,25 @@ public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
             instance = DotNetObjectReference.Create(this);
 
             var config = GetConfig();
-            var scripts = new List<InjectRequest>
+            var injectRequests = new List<InjectRequest>
             {
                 ScriptInjectRequest.FromResource("BlazorCkEditor", GetType().Assembly, "ckeditor.js",
                     InjectScope.Scoped),
                 ScriptInjectRequest.FromUrl(OptionsProvider.Options.EditorClassName,
-                    OptionsProvider.Options.ScriptPath, InjectScope.Scoped),
-                CssInjectRequest.FromUrl($"{OptionsProvider.Options.EditorClassName}Css",
-                    OptionsProvider.Options.StylePath)
+                    OptionsProvider.Options.ScriptPath, InjectScope.Scoped)
             };
-            foreach (var (key, path) in OptionsProvider.Options.GetAdditionalScripts(config))
+            if (!string.IsNullOrEmpty(OptionsProvider.Options.StylePath))
             {
-                scripts.Add(ScriptInjectRequest.FromUrl(key, path));
+                injectRequests.Add(CssInjectRequest.FromUrl($"{OptionsProvider.Options.EditorClassName}Css",
+                    OptionsProvider.Options.StylePath));
             }
 
-            await ScriptInjector.InjectAsync(scripts, InitializeEditorAsync);
+            foreach (var (key, path) in OptionsProvider.Options.GetAdditionalScripts(config))
+            {
+                injectRequests.Add(ScriptInjectRequest.FromUrl(key, path));
+            }
+
+            await ScriptInjector.InjectAsync(injectRequests, InitializeEditorAsync);
         }
     }
 
