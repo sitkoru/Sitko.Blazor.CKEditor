@@ -2,9 +2,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using JetBrains.Annotations;
 
-[PublicAPI]
 public class CKEditorOptions
 {
     [Required] public virtual string ScriptPath { get; set; } = "";

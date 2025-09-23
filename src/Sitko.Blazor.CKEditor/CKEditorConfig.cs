@@ -2,9 +2,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 
-[PublicAPI]
+
 public class CKEditorConfig
 {
     public string? InitialData { get; set; }
@@ -13,7 +12,6 @@ public class CKEditorConfig
     public CKEditorToolbar? Toolbar { get; set; }
 }
 
-[PublicAPI]
 public class CKEditorToolbar
 {
     public List<string> Items { get; set; } = new();

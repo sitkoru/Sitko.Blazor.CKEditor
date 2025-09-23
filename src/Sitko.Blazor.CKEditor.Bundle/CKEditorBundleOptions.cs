@@ -2,9 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
-[PublicAPI]
 public class CKEditorBundleOptions : CKEditorOptions
 {
     public CKEditorTheme Theme { get; set; } = CKEditorTheme.Light;

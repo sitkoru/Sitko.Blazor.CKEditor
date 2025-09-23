@@ -6,14 +6,13 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using ScriptInjector;
 
-[PublicAPI]
+
 public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
 {
     private DotNetObjectReference<BaseCKEditorComponent>? instance;

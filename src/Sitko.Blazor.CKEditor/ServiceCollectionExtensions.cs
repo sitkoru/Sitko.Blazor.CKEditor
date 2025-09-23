@@ -1,12 +1,10 @@
 ﻿namespace Sitko.Blazor.CKEditor;
 
 using System;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ScriptInjector;
 
-[PublicAPI]
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCKEditor<TOptions>(
