@@ -42,33 +42,25 @@ public class CKEditorBundleOptions : CKEditorOptions
         Language = "en"
     };
 
-    public override string ScriptPath => Theme switch
-    {
-        CKEditorTheme.Light => $"{BasePath}/ckeditor.js",
-        CKEditorTheme.Dark => $"{BasePath}/ckeditor.dark.js",
-        _ => throw new ArgumentOutOfRangeException()
-    };
+    public override string ScriptPath => $"{BasePath}/ckeditor.js";
 
-    public override string StylePath => Theme switch
+    public override Dictionary<string, string> StylePaths
     {
-        CKEditorTheme.Light => $"{BasePath}/ckeditor.css",
-        CKEditorTheme.Dark => $"{BasePath}/ckeditor.dark.css",
-        _ => throw new ArgumentOutOfRangeException()
-    };
+        get
+        {
+            var styles = new Dictionary<string, string>();
+            styles.Add("basic", $"{BasePath}/ckeditor.css");
+            if (Theme == CKEditorTheme.Dark)
+            {
+                styles.Add("dark", $"{BasePath}/ckeditor.dark.css");
+            }
+
+            return styles;
+        }
+    }
 
     public override string EditorClassName { get; set; } = "BlazorEditor";
     private string BasePath => $"/_content/{typeof(CKEditorTheme).Assembly.GetName().Name}";
-
-    public override Dictionary<string, string> GetAdditionalScripts(CKEditorConfig? config)
-    {
-        var scripts = new Dictionary<string, string>();
-        if (!string.IsNullOrEmpty(config?.Language) && config.Language != DefaultConfig.Language)
-        {
-            scripts.Add("BlazorEditorLang", $"{BasePath}/translations/{config.Language}.js");
-        }
-
-        return scripts;
-    }
 }
 
 public enum CKEditorTheme
