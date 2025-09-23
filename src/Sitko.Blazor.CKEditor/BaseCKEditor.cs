@@ -12,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using ScriptInjector;
 
-
 public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
 {
     private DotNetObjectReference<BaseCKEditorComponent>? instance;
@@ -42,7 +41,12 @@ public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
     {
         GC.SuppressFinalize(this);
         instance?.Dispose();
-        return DestroyEditor();
+        if (rendered)
+        {
+            return DestroyEditor();
+        }
+
+        return ValueTask.CompletedTask;
     }
 
     protected override async Task OnParametersSetAsync()
@@ -73,10 +77,14 @@ public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
                 ScriptInjectRequest.FromUrl(OptionsProvider.Options.EditorClassName,
                     OptionsProvider.Options.ScriptPath, InjectScope.Scoped)
             };
-            if (!string.IsNullOrEmpty(OptionsProvider.Options.StylePath))
+            if (OptionsProvider.Options.StylePaths.Count != 0)
             {
-                injectRequests.Add(CssInjectRequest.FromUrl($"{OptionsProvider.Options.EditorClassName}Css",
-                    OptionsProvider.Options.StylePath));
+                foreach (var (styleName, stylePath) in OptionsProvider.Options.StylePaths)
+                {
+                    injectRequests.Add(
+                        CssInjectRequest.FromUrl($"{OptionsProvider.Options.EditorClassName}{styleName}Css",
+                            stylePath));
+                }
             }
 
             foreach (var (key, path) in OptionsProvider.Options.GetAdditionalScripts(config))
@@ -96,7 +104,7 @@ public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
         rendered = true;
     }
 
-    private CKEditorConfig? GetConfig() => Config ?? OptionsProvider.Options.CKEditorConfig;
+    private CKEditorConfig? GetConfig() => Config ?? OptionsProvider.Options.CKEditorConfig ?? new CKEditorConfig();
 
 
     protected ValueTask DestroyEditor()
