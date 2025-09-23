@@ -14,7 +14,7 @@
     "@ckeditor/ckeditor5-basic-styles": "^40.1.0",
     "@ckeditor/ckeditor5-code-block": "^40.1.0",
     "@ckeditor/ckeditor5-dev-translations": "^39.3.0",
-    "@ckeditor/ckeditor5-dev-utils": "^39.3.0",
+    "@ckeditor/ckeditor5-dev-utils": "^39.9.0",
     "@ckeditor/ckeditor5-editor-classic": "^40.1.0",
     "@ckeditor/ckeditor5-essentials": "^40.1.0",
     "@ckeditor/ckeditor5-heading": "^40.1.0",
