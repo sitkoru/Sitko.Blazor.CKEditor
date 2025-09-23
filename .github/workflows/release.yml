@@ -9,6 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container: ghcr.io/sitkoru/actions-container
+    permissions:
+      id-token: write
+      packages: write
     env:
       PROJECT: Sitko.Blazor.CKEditor
       BUNDLE_PROJECT: Sitko.Blazor.CKEditor.Bundle
@@ -33,6 +36,11 @@ jobs:
           npm run prod
       - name: Create packages
         run: dotnet pack /p:Version=${{ steps.prep.outputs.version }} -c Release -o $(pwd)/packages
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
       - name: Push to Nuget
-        run: find packages -name *.nupkg -exec dotnet nuget push {} -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} \;
+        run: find packages -name *.nupkg -exec dotnet nuget push {} -s https://api.nuget.org/v3/index.json -k ${{ steps.login.outputs.NUGET_API_KEY }} \;
 
