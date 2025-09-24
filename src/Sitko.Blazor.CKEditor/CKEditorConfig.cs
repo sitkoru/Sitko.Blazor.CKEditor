@@ -10,6 +10,7 @@ public class CKEditorConfig
     public string? Language { get; set; }
     public string? Placeholder { get; set; }
     public CKEditorToolbar? Toolbar { get; set; }
+    public string LicenseKey { get; set; } = "GPL"; // Open Source license
 }
 
 public class CKEditorToolbar
