@@ -37,13 +37,16 @@ services.AddCKEditor(Configuration, options =>
 });
 ```
 
-If you have custom build or separate css file - configure it via StylePath:
+If you have custom build or separate css files - configure it via StylePaths:
 
 ```json
 {
     "CKEditor": {
         "ScriptPath": "/ckeditor/ckeditor.js",
-        "StylePath": "/ckeditor/ckeditor.css",
+        "StylePaths": {
+            "base": "/ckeditor/ckeditor.css",
+            "dark": "/ckeditor/ckeditor.dark.css"
+        },
         "EditorClassName": "ClassicEditor"
     }
 }
@@ -52,7 +55,10 @@ If you have custom build or separate css file - configure it via StylePath:
 services.AddCKEditor(Configuration, options =>
 {
     options.ScriptPath = "/ckeditor/ckeditor.js";
-    options.StylePath = "/ckeditor/ckeditor.css";
+    options.StylePaths = new Dictionary<string, string>
+        {
+            { "base", "/ckeditor/ckeditor.css" }, { "dark", "/ckeditor/ckeditor.dark.css" },
+        };
     options.EditorClassName = "ClassicEditor";
 });
 ```
