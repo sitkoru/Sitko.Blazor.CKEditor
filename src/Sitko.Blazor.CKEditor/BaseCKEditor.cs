@@ -83,13 +83,13 @@ public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
                 {
                     injectRequests.Add(
                         CssInjectRequest.FromUrl($"{OptionsProvider.Options.EditorClassName}{styleName}Css",
-                            stylePath));
+                            stylePath, InjectScope.Scoped));
                 }
             }
 
             foreach (var (key, path) in OptionsProvider.Options.GetAdditionalScripts(config))
             {
-                injectRequests.Add(ScriptInjectRequest.FromUrl(key, path));
+                injectRequests.Add(ScriptInjectRequest.FromUrl(key, path, InjectScope.Scoped));
             }
 
             await ScriptInjector.InjectAsync(injectRequests, InitializeEditorAsync);
