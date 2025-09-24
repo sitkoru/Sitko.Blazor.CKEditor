@@ -37,16 +37,21 @@ public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
     protected ElementReference EditorRef { get; set; }
     public Guid Id { get; } = Guid.NewGuid();
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
-        instance?.Dispose();
-        if (rendered)
+        try
         {
-            return DestroyEditor();
+            instance?.Dispose();
+            if (rendered)
+            {
+                await DestroyEditor();
+            }
         }
-
-        return ValueTask.CompletedTask;
+        catch (JSDisconnectedException)
+        {
+            // on server render page refresh could cause this exception, just ignoring it
+        }
     }
 
     protected override async Task OnParametersSetAsync()
@@ -98,10 +103,17 @@ public abstract class BaseCKEditorComponent : InputText, IAsyncDisposable
 
     private async Task InitializeEditorAsync(CancellationToken cancellationToken)
     {
-        await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", cancellationToken, EditorRef,
-            OptionsProvider.Options.EditorClassName, instance!, Id,
-            JsonSerializer.Serialize(GetConfig(), jsonOptions));
-        rendered = true;
+        try
+        {
+            await JsRuntime.InvokeVoidAsync("window.SitkoBlazorCKEditor.init", cancellationToken, EditorRef,
+                OptionsProvider.Options.EditorClassName, instance!, Id,
+                JsonSerializer.Serialize(GetConfig(), jsonOptions));
+            rendered = true;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, ex.Message);
+        }
     }
 
     private CKEditorConfig? GetConfig() => Config ?? OptionsProvider.Options.CKEditorConfig ?? new CKEditorConfig();
